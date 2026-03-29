@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mondiale di Tennis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0b1d2a;
+      color: white;
+    }
+
+    header {
+      background: #132f4c;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    nav {
+      background: #0f253a;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: #132f4c;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    .title {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    🎾 Mondiale di Tennis con i Dadi
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Classifica</a>
+    <a href="#">Tornei</a>
+    <a href="#">Video</a>
+  </nav>
+
+  <div class="container">
+
+    <div class="card">
+      <div class="title">Benvenuto</div>
+      <p>Questo è il Mondiale di Tennis simulato con i dadi. 32 giocatori, 28 settimane, tornei ATP 250, 500, Master 1000 e Slam.</p>
+    </div>
+
+    <div class="card">
+      <div class="title">Ultimo torneo</div>
+      <p>In arrivo...</p>
+    </div>
+
+    <div class="card">
+      <div class="title">Prossimi eventi</div>
+      <p>Calendario in aggiornamento.</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
