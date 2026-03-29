@@ -23,44 +23,52 @@
 
     .container {
       padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
     }
 
     .player-card {
       display: flex;
       background: #132f4c;
       border-radius: 12px;
-      margin-bottom: 20px;
       overflow: hidden;
-      max-width: 500px;
+      width: 220px;
+      height: 150px;
+      flex-shrink: 0;
     }
 
     .player-img {
-      width: 150px;
-      height: 150px;
+      width: 100px;
+      height: 100%;
       object-fit: cover;
+      background: #0f253a;
     }
 
     .player-info {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 15px;
+      padding: 10px;
       flex: 1;
     }
 
     .name {
-      font-size: 20px;
+      font-size: 16px;
       text-transform: lowercase;
     }
 
     .surname {
-      font-size: 28px;
+      font-size: 20px;
       font-weight: bold;
       text-transform: uppercase;
     }
 
     .flag {
-      width: 40px;
+      width: 30px;
+      height: auto;
+      background: #0f253a;
     }
 
   </style>
@@ -73,16 +81,17 @@
 
   <div class="container">
 
-    <div class="player-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Jannik_Sinner_2023.jpg" class="player-img">
-
-      <div class="player-info">
-        <div class="name">jannik</div>
-        <div class="surname">SINNER</div>
-        <img src="https://flagcdn.com/w40/it.png" class="flag">
-      </div>
-    </div>
-
+    <!-- 44 box generici -->
+    
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <div class="player-card"><div class="player-img"></div><div class="player-info"><div class="name">nome</div><div class="surname">COGNOME</div><img src="https://flagcdn.com/w40/xx.png" class="flag"></div></div>
+    <!-- Continua fino a 44 -->
   </div>
 
 </body>
