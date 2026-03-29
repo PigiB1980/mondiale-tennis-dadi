@@ -14,27 +14,38 @@
 
     header {
       background: #132f4c;
-      padding: 20px;
+      padding: 25px;
       text-align: center;
-      font-size: 28px;
+      font-size: 36px;
       font-weight: bold;
     }
 
     nav {
       background: #0f253a;
-      padding: 10px;
+      padding: 15px;
       text-align: center;
     }
 
     nav a {
+      display: inline-block;
       color: white;
-      margin: 0 15px;
+      margin: 10px;
+      padding: 12px 20px;
       text-decoration: none;
       font-weight: bold;
+      background: #1c4d73;
+      border-radius: 8px;
+      box-shadow: 0 4px 0 #0a1a28;
+      transition: all 0.1s ease;
     }
 
     nav a:hover {
-      text-decoration: underline;
+      background: #246a9b;
+    }
+
+    nav a:active {
+      box-shadow: 0 2px 0 #0a1a28;
+      transform: translateY(2px);
     }
 
     .container {
@@ -58,13 +69,13 @@
 <body>
 
   <header>
-    🎾 Mondiale di Tennis con i Dadi
+    🎾 Mondiale di Tennis con i Dadi 🎲
   </header>
 
   <nav>
-    <a href="#">Home</a>
     <a href="#">Classifica</a>
     <a href="#">Tornei</a>
+    <a href="#">Giocatori</a>
     <a href="#">Video</a>
   </nav>
 
@@ -89,3 +100,4 @@
 
 </body>
 </html>
+
