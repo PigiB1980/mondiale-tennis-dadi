@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giocatori</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0b1d2a;
+      color: white;
+    }
+
+    header {
+      background: #132f4c;
+      padding: 25px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .player-card {
+      display: flex;
+      background: #132f4c;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      max-width: 500px;
+    }
+
+    .player-img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .player-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 15px;
+      flex: 1;
+    }
+
+    .name {
+      font-size: 20px;
+      text-transform: lowercase;
+    }
+
+    .surname {
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .flag {
+      width: 40px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    🎾 Giocatori
+  </header>
+
+  <div class="container">
+
+    <div class="player-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Jannik_Sinner_2023.jpg" class="player-img">
+
+      <div class="player-info">
+        <div class="name">jannik</div>
+        <div class="surname">SINNER</div>
+        <img src="https://flagcdn.com/w40/it.png" class="flag">
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
