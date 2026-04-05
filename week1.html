@@ -53,23 +53,25 @@
       width: 800px;
     }
 
-    .tournament h2 {
+    .tournament-header {
+  display: flex;
+  justify-content: space-between; /* logo a sinistra e a destra */
+  align-items: center;
   font-size: 40px;
-  text-transform: uppercase;
   font-weight: bold;
-  color: red; /* testo rosso */
-  text-align: center;
+  text-transform: uppercase;
 }
 
-.tournament h2 .tournament-name {
+.tournament-header .tournament-name {
+  color: red; /* testo rosso */
   background: linear-gradient(to right, #f9f9f9, #e0e0e0); /* sfumatura chiara sotto il testo */
   padding: 5px 15px;
   border-radius: 8px;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.3); /* ombra leggera */
 }
-    
-.tournament h2 img {
-  height: 50px; /* dimensione dei loghi */
+
+.tournament-header img {
+  height: 50px; /* dimensione loghi */
 }
 
     .round-title {
@@ -146,10 +148,10 @@
           tourDiv.classList.add("tournament");
 
           tourDiv.innerHTML = `
-            <h2>
-  <img src="${logoATP250}" alt="Logo ATP 250">
+            <h2 class="tournament-header">
+  <img src="${logoATP250}" alt="Logo ATP 250" class="logo-left">
   <span class="tournament-name">${name.toUpperCase()}</span>
-  <img src="${logosSinistri[name]}" alt="Logo torneo">
+  <img src="${logosSinistri[name]}" alt="Logo torneo" class="logo-right">
 </h2>
             <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
             <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
