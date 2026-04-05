@@ -42,20 +42,20 @@
     .match {
       display: grid;
       grid-template-columns: 60px 1fr 160px;
-      padding: 10px 0;
-      border-bottom: 3px solid #1c4d73;
+      padding: 12px 0;
+      border-bottom: 4px solid #1c4d73;
       font-size: 18px;
     }
 
     .match div:nth-child(1) {
-      border-right: 3px solid #1c4d73;
+      border-right: 4px solid #1c4d73;
       text-align: center;
       font-weight: bold;
       font-size: 20px;
     }
 
     .match div:nth-child(2) {
-      border-right: 3px solid #1c4d73;
+      border-right: 4px solid #1c4d73;
       font-size: 18px;
     }
 
@@ -69,7 +69,6 @@
       vertical-align: middle;
       margin-right: 6px;
     }
-
   </style>
 </head>
 <body>
@@ -79,30 +78,6 @@
   <div id="tournaments-container"></div>
 
   <script>
-    // JSON unico per tutta Week 1
-    const week1 = {
-      "Brisbane": {
-        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
-      },
-      "Adelaide": {
-        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
-      },
-      "Auckland": {
-        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
-      },
-      "Melbourne1": {
-        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
-        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
-      }
-    };
-
     const tournamentsContainer = document.getElementById("tournaments-container");
 
     function createTournamentHTML(name, data) {
@@ -139,11 +114,15 @@
       });
     }
 
-    // Crea tutti i tornei
-    for (let tournament in week1) {
-      createTournamentHTML(tournament, week1[tournament]);
-    }
-
+    // Carica il JSON esterno week1.json
+    fetch("week1.json")
+      .then(response => response.json())
+      .then(week1 => {
+        for (let tournament in week1) {
+          createTournamentHTML(tournament, week1[tournament]);
+        }
+      })
+      .catch(err => console.error("Errore caricando week1.json:", err));
   </script>
 
 </body>
