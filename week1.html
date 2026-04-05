@@ -29,9 +29,22 @@
 }
 
     .tournament h2 {
-      font-size: 26px;
-      margin-bottom: 15px;
-    }
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: red;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tournament h2 img {
+    width: 50px;        /* dimensione logo */
+    height: 50px;
+    margin: 0 15px;     /* spazio tra logo e testo */
+  }
 
     .round-title {
       font-size: 22px;
@@ -95,11 +108,16 @@
           const tourDiv = document.createElement("div");
           tourDiv.classList.add("tournament");
 
-          tourDiv.innerHTML = `<h2>${name}</h2>
-            <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
-            <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
-            <div class="round-title">Finale</div><div id="${name}-finale"></div>
-          `;
+          tourDiv.innerHTML = `
+  <h2>
+    <img src="logo-sinistro.png" alt="Logo torneo">
+    ${name}
+    <img src="logo-destro.png" alt="Logo torneo">
+  </h2>
+  <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
+  <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
+  <div class="round-title">Finale</div><div id="${name}-finale"></div>
+`;
           tournamentsContainer.appendChild(tourDiv);
 
           createMatches(`${name}-quarti`, data.quarti);
