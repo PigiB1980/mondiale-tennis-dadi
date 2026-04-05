@@ -47,14 +47,37 @@
 
     .match {
       display: grid;
-      grid-template-columns: 40px 1fr 120px;
-      padding: 5px 0;
+      grid-template-columns: 50px 1fr 140px;
+      padding: 8px 0;
       border-bottom: 1px solid #0b1d2a;
+    }
+
+    .match:first-child {
+      border-top: 2px solid #1c4d73;
+    }
+
+    .match div {
+      padding: 0 10px;
+    }
+
+    .match div:nth-child(1) {
+      border-right: 2px solid #1c4d73;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .match div:nth-child(2) {
+      border-right: 2px solid #1c4d73;
+    }
+
+    .match div:nth-child(3) {
+      text-align: right;
     }
 
     .match:last-child {
       border-bottom: none;
     }
+
   </style>
 </head>
 
@@ -83,6 +106,7 @@ fetch('week1.json')
 
     function round(title, matches) {
       let html = `<div class="round"><div class="round-title">${title}</div>`;
+      
       matches.forEach((m,i) => {
         html += `<div class="match">
           <div>${i+1}</div>
@@ -90,6 +114,7 @@ fetch('week1.json')
           <div>${m.score}</div>
         </div>`;
       });
+
       html += `</div>`;
       return html;
     }
