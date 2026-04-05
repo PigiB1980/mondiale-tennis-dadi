@@ -25,31 +25,44 @@
       padding: 20px;
     }
 
-    .tournament {
-      margin-bottom: 40px;
+    .tournament-title {
+      font-size: 24px;
+      margin-bottom: 20px;
     }
 
-    .tournament-title {
-      font-size: 22px;
+    .round {
+      margin-bottom: 25px;
+      background: #132f4c;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .round-title {
+      font-size: 20px;
       margin-bottom: 10px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #132f4c;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: center;
+    .match {
+      display: grid;
+      grid-template-columns: 40px 1fr 120px;
+      padding: 6px 0;
       border-bottom: 1px solid #0b1d2a;
     }
 
-    th {
-      background: #1c4d73;
+    .match:last-child {
+      border-bottom: none;
+    }
+
+    .match-number {
+      font-weight: bold;
+    }
+
+    .match-players {
+      text-align: left;
+    }
+
+    .match-score {
+      text-align: right;
     }
 
   </style>
@@ -58,102 +71,49 @@
 <body>
 
   <header>
-    Week 1 – ATP 250
+    Week 1 – Brisbane (ATP 250)
   </header>
 
   <div class="container">
 
-    <!-- TORNEO 1 -->
-    <div class="tournament">
-      <div class="tournament-title">Brisbane</div>
-      <table>
-        <tr>
-          <th>Quarti</th>
-          <th>Semifinali</th>
-          <th>Finale</th>
-        </tr>
+    <div class="tournament-title">Brisbane</div>
 
-        <tr>
-          <td>Giocatore 1<br>Giocatore 2</td>
-          <td>Vincitore QF1<br>Vincitore QF2</td>
-          <td>Vincitore SF1<br>Vincitore SF2</td>
-        </tr>
-
-        <tr>
-          <td>Giocatore 3<br>Giocatore 4</td>
-          <td></td>
-          <td></td>
-        </tr>
-
-        <tr>
-          <td>Giocatore 5<br>Giocatore 6</td>
-          <td>Vincitore QF3<br>Vincitore QF4</td>
-          <td></td>
-        </tr>
-
-        <tr>
-          <td>Giocatore 7<br>Giocatore 8</td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- TORNEO 2 -->
-    <div class="tournament">
-      <div class="tournament-title">Hong Kong</div>
-      <table>
-        <tr>
-          <th>Quarti</th>
-          <th>Semifinali</th>
-          <th>Finale</th>
-        </tr>
-
-        <tr>
-          <td>...</td>
-          <td>...</td>
-          <td>...</td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- TORNEO 3 -->
-    <div class="tournament">
-      <div class="tournament-title">Adelaide</div>
-      <table>
-        <tr>
-          <th>Quarti</th>
-          <th>Semifinali</th>
-          <th>Finale</th>
-        </tr>
-
-        <tr>
-          <td>...</td>
-          <td>...</td>
-          <td>...</td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- TORNEO 4 -->
-    <div class="tournament">
-      <div class="tournament-title">Auckland</div>
-      <table>
-        <tr>
-          <th>Quarti</th>
-          <th>Semifinali</th>
-          <th>Finale</th>
-        </tr>
-
-        <tr>
-          <td>...</td>
-          <td>...</td>
-          <td>...</td>
-        </tr>
-      </table>
-    </div>
+    <div id="brisbane"></div>
 
   </div>
+
+  <script>
+    fetch('brisbane.json')
+      .then(response => response.json())
+      .then(data => {
+
+        const container = document.getElementById('brisbane');
+
+        function createRound(title, matches) {
+          let html = `<div class="round">
+                        <div class="round-title">${title}</div>`;
+
+          matches.forEach((m, i) => {
+            html += `
+              <div class="match">
+                <div class="match-number">${i+1}</div>
+                <div class="match-players">${m.p1} - ${m.p2}</div>
+                <div class="match-score">${m.score}</div>
+              </div>
+            `;
+          });
+
+          html += `</div>`;
+          return html;
+        }
+
+        container.innerHTML =
+          createRound("Quarti di finale", data.quarti) +
+          createRound("Semifinali", data.semi) +
+          createRound("Finale", data.finale);
+
+      });
+  </script>
 
 </body>
 </html>
