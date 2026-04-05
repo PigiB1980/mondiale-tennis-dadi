@@ -24,23 +24,33 @@
       background: #132f4c;
       border-radius: 10px;
       padding: 20px;
-      margin: 20px auto; /* centra orizzontalmente */
-      width: 850px;
+      margin: 20px auto;
+      width: 800px;
     }
 
-    .tournament h2 {
-      font-size: 36px;
-      color: red;
-      text-shadow: 2px 2px 4px black;
-      text-align: center;
+    /* Titolo torneo con flexbox */
+    .tournament-header {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
     }
 
-    .tournament h2 img {
-      height: 50px;
-      margin: 0 15px;
+    .tournament-header h2 {
+      flex: 1;
+      text-align: center;
+      font-size: 32px;
+      color: red;
+      text-shadow: 2px 2px 5px black;
+      margin: 0;
+    }
+
+    .tournament-header img.logo-left {
+      height: 40px;
+    }
+
+    .tournament-header img.logo-right {
+      height: 60px;
     }
 
     .round-title {
@@ -95,17 +105,15 @@
   <div id="tournaments-container"></div>
 
   <script>
-    const tournamentsContainer = document.getElementById("tournaments-container");
-
-    // Loghi sinistri per torneo
+    const logoATP250 = "img/atp 250.png";
     const logosSinistri = {
-      "brisbane": "img/01 - Brisbane.png",
-      "adelaide": "img/01 - Adelaide.png",
-      "auckland": "img/01 - Auckland.png",
-      "hongkong": "img/01 - Hong Kong.jpg"
+      "Brisbane": "img/01 - Brisbane.png",
+      "Adelaide": "img/01 - Adelaide.png",
+      "Auckland": "img/01 - Auckland.png",
+      "Hongkong": "img/01 - Hong Kong.jpg"
     };
 
-    const logoATP250 = "img/atp 250.png";
+    const tournamentsContainer = document.getElementById("tournaments-container");
 
     fetch('week1.json')
       .then(response => response.json())
@@ -116,11 +124,12 @@
           tourDiv.classList.add("tournament");
 
           tourDiv.innerHTML = `
-            <h2>
-              <img src="${logoATP250}" alt="Logo ATP 250">
-${name.toUpperCase()}
-<img src="${logosSinistri[name]}" alt="Logo torneo">
-            </h2>
+            <div class="tournament-header">
+              <img src="${logoATP250}" alt="Logo ATP" class="logo-left">
+              <h2>${name.toUpperCase()}</h2>
+              <img src="${logosSinistri[name]}" alt="Logo torneo" class="logo-right">
+            </div>
+
             <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
             <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
             <div class="round-title">Finale</div><div id="${name}-finale"></div>
