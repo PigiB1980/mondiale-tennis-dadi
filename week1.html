@@ -11,9 +11,29 @@
       background: #0b1d2a;
       color: white;
     }
-    <button class="home-button" onclick="location.href='index.html'">
-  🏠 Home
-</button>
+
+    /* Pulsante Home fisso */
+    .home-button {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .home-button:hover {
+      background: #cc0000;
+    }
 
     header {
       background: #132f4c;
@@ -27,33 +47,24 @@
       background: #132f4c;
       border-radius: 10px;
       padding: 20px;
-      margin: 20px auto;
+      margin: 20px auto; /* centra orizzontalmente */
       width: 800px;
     }
 
-    /* Titolo torneo con flexbox */
-    .tournament-header {
+    .tournament h2 {
+      font-size: 32px;
+      text-transform: uppercase;
+      color: red;
+      text-align: center;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 15px;
     }
 
-    .tournament-header h2 {
-      flex: 1;
-      text-align: center;
-      font-size: 32px;
-      color: red;
-      text-shadow: 2px 2px 5px black;
-      margin: 0;
-    }
-
-    .tournament-header img.logo-left {
-      height: 40px;
-    }
-
-    .tournament-header img.logo-right {
-      height: 60px;
+    .tournament h2 img {
+      height: 50px;
     }
 
     .round-title {
@@ -99,43 +110,24 @@
       margin-right: 6px;
     }
 
-    .home-button {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: #ff0000; /* rosso, puoi cambiare */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-}
-
-.home-button:hover {
-  background: #cc0000;
-}
-
   </style>
 </head>
 <body>
+
+  <!-- Pulsante Home -->
+  <button class="home-button" onclick="location.href='index.html'">🏠 Home</button>
 
   <header>🎾 WEEK 1 🎾</header>
 
   <div id="tournaments-container"></div>
 
   <script>
-    const logoATP250 = "img/atp 250.png";
+    const logoATP250 = 'img/atp 250.png';
     const logosSinistri = {
-      "brisbane": "img/01 - Brisbane.png",
-      "adelaide": "img/01 - Adelaide.png",
-      "auckland": "img/01 - Auckland.png",
-      "hongkong": "img/01 - Hong Kong.jpg"
+      "Brisbane": "img/01 - Brisbane.png",
+      "Adelaide": "img/01 - Adelaide.png",
+      "Auckland": "img/01 - Auckland.png",
+      "Hongkong": "img/01 - Hong Kong.jpg"
     };
 
     const tournamentsContainer = document.getElementById("tournaments-container");
@@ -149,17 +141,15 @@
           tourDiv.classList.add("tournament");
 
           tourDiv.innerHTML = `
-            <div class="tournament-header">
-              <img src="${logoATP250}" alt="Logo ATP" class="logo-left">
-              <h2>${name.toUpperCase()}</h2>
-              <img src="${logosSinistri[name]}" alt="Logo torneo" class="logo-right">
-            </div>
-
+            <h2>
+              <img src="${logoATP250}" alt="Logo ATP 250">
+              ${name.toUpperCase()}
+              <img src="${logosSinistri[name]}" alt="Logo torneo">
+            </h2>
             <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
             <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
             <div class="round-title">Finale</div><div id="${name}-finale"></div>
           `;
-
           tournamentsContainer.appendChild(tourDiv);
 
           createMatches(`${name}-quarti`, data.quarti);
@@ -191,7 +181,6 @@
 
       })
       .catch(err => console.error('Errore nel caricamento del JSON:', err));
-
   </script>
 
 </body>
