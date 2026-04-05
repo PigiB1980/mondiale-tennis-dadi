@@ -2,12 +2,11 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Week 1</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       margin: 0;
       background: #0b1d2a;
       color: white;
@@ -25,95 +24,94 @@
       padding: 20px;
     }
 
+    .tournament {
+      margin-bottom: 50px;
+    }
+
     .tournament-title {
       font-size: 24px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .round {
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       background: #132f4c;
       padding: 15px;
       border-radius: 10px;
     }
 
     .round-title {
-      font-size: 20px;
+      font-size: 18px;
       margin-bottom: 10px;
     }
 
     .match {
       display: grid;
       grid-template-columns: 40px 1fr 120px;
-      padding: 6px 0;
+      padding: 5px 0;
       border-bottom: 1px solid #0b1d2a;
     }
 
     .match:last-child {
       border-bottom: none;
     }
-
-    .match-number {
-      font-weight: bold;
-    }
-
-    .match-players {
-      text-align: left;
-    }
-
-    .match-score {
-      text-align: right;
-    }
-
   </style>
 </head>
 
 <body>
 
-  <header>
-    Week 1 – Brisbane (ATP 250)
-  </header>
+<header>
+  Week 1 – ATP 250
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="tournament-title">Brisbane</div>
+  <div id="brisbane"></div>
+  <div id="hongkong"></div>
+  <div id="adelaide"></div>
+  <div id="auckland"></div>
 
-    <div id="brisbane"></div>
+</div>
 
-  </div>
+<script>
 
-  <script>
-    fetch('brisbane.json')
-      .then(response => response.json())
-      .then(data => {
+fetch('week1.json')
+.then(r => r.json())
+.then(data => {
 
-        const container = document.getElementById('brisbane');
+  function createTournament(name, data) {
 
-        function createRound(title, matches) {
-          let html = `<div class="round">
-                        <div class="round-title">${title}</div>`;
-
-          matches.forEach((m, i) => {
-            html += `
-              <div class="match">
-                <div class="match-number">${i+1}</div>
-                <div class="match-players">${m.p1} - ${m.p2}</div>
-                <div class="match-score">${m.score}</div>
-              </div>
-            `;
-          });
-
-          html += `</div>`;
-          return html;
-        }
-
-        container.innerHTML =
-          createRound("Quarti di finale", data.quarti) +
-          createRound("Semifinali", data.semi) +
-          createRound("Finale", data.finale);
-
+    function round(title, matches) {
+      let html = `<div class="round"><div class="round-title">${title}</div>`;
+      matches.forEach((m,i) => {
+        html += `<div class="match">
+          <div>${i+1}</div>
+          <div>${m.p1} - ${m.p2}</div>
+          <div>${m.score}</div>
+        </div>`;
       });
-  </script>
+      html += `</div>`;
+      return html;
+    }
+
+    return `
+      <div class="tournament">
+        <div class="tournament-title">${name}</div>
+        ${round("Quarti di finale", data.quarti)}
+        ${round("Semifinali", data.semi)}
+        ${round("Finale", data.finale)}
+      </div>
+    `;
+  }
+
+  document.getElementById('brisbane').innerHTML = createTournament("Brisbane", data.brisbane);
+  document.getElementById('hongkong').innerHTML = createTournament("Hong Kong", data.hongkong);
+  document.getElementById('adelaide').innerHTML = createTournament("Adelaide", data.adelaide);
+  document.getElementById('auckland').innerHTML = createTournament("Auckland", data.auckland);
+
+});
+
+</script>
 
 </body>
 </html>
