@@ -21,30 +21,27 @@
     }
 
     .tournament {
-  background: #132f4c;
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px auto; /* auto centra orizzontalmente */
-  width: 800px;      /* larghezza totale del torneo */
-}
+      background: #132f4c;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto; /* centra orizzontalmente */
+      width: 850px;
+    }
 
     .tournament h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    color: red;
-    text-transform: uppercase;
-    text-align: center;
-    text-shadow: 2px 2px 4px #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+      font-size: 36px;
+      color: red;
+      text-shadow: 2px 2px 4px black;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .tournament h2 img {
-    width: 50px;        /* dimensione logo */
-    height: 50px;
-    margin: 0 15px;     /* spazio tra logo e testo */
-  }
+    .tournament h2 img {
+      height: 50px;
+      margin: 0 15px;
+    }
 
     .round-title {
       font-size: 22px;
@@ -71,15 +68,15 @@
     .match div:nth-child(2) {
       border-right: 4px solid #1c4d73;
       font-size: 25px;
-      padding-left: 30px; /* partita leggermente spostata a destra */
-      white-space: nowrap; /* evita che il testo vada a capo */
+      padding-left: 30px;
+      white-space: nowrap;
       overflow: hidden;
     }
 
     .match div:nth-child(3) {
       text-align: center;
       font-size: 25px;
-      padding-left: 5px; /* punteggio molto vicino alla partita */
+      padding-left: 5px;
       white-space: nowrap;
     }
 
@@ -93,12 +90,22 @@
 </head>
 <body>
 
-  <header>🎾 WEEK 1 🎾 </header>
+  <header>🎾 WEEK 1 🎾</header>
 
   <div id="tournaments-container"></div>
 
   <script>
     const tournamentsContainer = document.getElementById("tournaments-container");
+
+    // Loghi sinistri per torneo
+    const logosSinistri = {
+      "Brisbane": "img/01 - Brisbane.png",
+      "Adelaide": "img/01 - Adelaide.png",
+      "Auckland": "img/01 - Auckland.png",
+      "Hongkong": "img/01 - Hong Kong.jpg"
+    };
+
+    const logoATP250 = "img/atp 250.png";
 
     fetch('week1.json')
       .then(response => response.json())
@@ -109,15 +116,16 @@
           tourDiv.classList.add("tournament");
 
           tourDiv.innerHTML = `
-  <h2>
-    <img src="logo-sinistro.png" alt="Logo torneo">
-    ${name}
-    <img src="img/atp 250.png" alt="Logo torneo">
-  </h2>
-  <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
-  <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
-  <div class="round-title">Finale</div><div id="${name}-finale"></div>
-`;
+            <h2>
+              <img src="${logosSinistri[name]}" alt="Logo torneo">
+              ${name.toUpperCase()}
+              <img src="${logoATP250}" alt="Logo ATP 250">
+            </h2>
+            <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
+            <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
+            <div class="round-title">Finale</div><div id="${name}-finale"></div>
+          `;
+
           tournamentsContainer.appendChild(tourDiv);
 
           createMatches(`${name}-quarti`, data.quarti);
