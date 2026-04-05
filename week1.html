@@ -2,11 +2,11 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Week 1</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 - Mondiale di Tennis</title>
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       margin: 0;
       background: #0b1d2a;
       color: white;
@@ -20,123 +20,131 @@
       font-weight: bold;
     }
 
-    .container {
-      padding: 20px;
-    }
-
     .tournament {
-      margin-bottom: 50px;
-    }
-
-    .tournament-title {
-      font-size: 24px;
-      margin-bottom: 15px;
-    }
-
-    .round {
-      margin-bottom: 20px;
+      padding: 20px;
+      margin: 20px;
       background: #132f4c;
-      padding: 15px;
       border-radius: 10px;
     }
 
+    .tournament h2 {
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
     .round-title {
-      font-size: 18px;
+      font-size: 22px;
+      margin-top: 20px;
       margin-bottom: 10px;
+      text-decoration: underline;
     }
 
     .match {
       display: grid;
-      grid-template-columns: 50px 1fr 140px;
-      padding: 8px 0;
-      border-bottom: 1px solid #0b1d2a;
-    }
-
-    .match:first-child {
-      border-top: 2px solid #1c4d73;
-    }
-
-    .match div {
-      padding: 0 10px;
+      grid-template-columns: 60px 1fr 160px;
+      padding: 10px 0;
+      border-bottom: 3px solid #1c4d73;
+      font-size: 18px;
     }
 
     .match div:nth-child(1) {
-      border-right: 2px solid #1c4d73;
+      border-right: 3px solid #1c4d73;
       text-align: center;
       font-weight: bold;
+      font-size: 20px;
     }
 
     .match div:nth-child(2) {
-      border-right: 2px solid #1c4d73;
+      border-right: 3px solid #1c4d73;
+      font-size: 18px;
     }
 
     .match div:nth-child(3) {
       text-align: right;
+      font-size: 18px;
     }
 
-    .match:last-child {
-      border-bottom: none;
+    .flag-small {
+      width: 18px;
+      vertical-align: middle;
+      margin-right: 6px;
     }
 
   </style>
 </head>
-
 <body>
 
-<header>
-  Week 1 – ATP 250
-</header>
+  <header>🎾 Week 1 - Mondiale di Tennis</header>
 
-<div class="container">
+  <div id="tournaments-container"></div>
 
-  <div id="brisbane"></div>
-  <div id="hongkong"></div>
-  <div id="adelaide"></div>
-  <div id="auckland"></div>
+  <script>
+    // JSON unico per tutta Week 1
+    const week1 = {
+      "Brisbane": {
+        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
+      },
+      "Adelaide": {
+        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
+      },
+      "Auckland": {
+        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
+      },
+      "Melbourne1": {
+        "quarti": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "semi": [ {"p1":"","f1":"","p2":"","f2":"","score":""}, {"p1":"","f1":"","p2":"","f2":"","score":""} ],
+        "finale": [ {"p1":"","f1":"","p2":"","f2":"","score":""} ]
+      }
+    };
 
-</div>
+    const tournamentsContainer = document.getElementById("tournaments-container");
 
-<script>
+    function createTournamentHTML(name, data) {
+      const tourDiv = document.createElement("div");
+      tourDiv.classList.add("tournament");
 
-fetch('week1.json')
-.then(r => r.json())
-.then(data => {
+      tourDiv.innerHTML = `<h2>${name}</h2>
+        <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
+        <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
+        <div class="round-title">Finale</div><div id="${name}-finale"></div>
+      `;
+      tournamentsContainer.appendChild(tourDiv);
 
-  function createTournament(name, data) {
-
-    function round(title, matches) {
-      let html = `<div class="round"><div class="round-title">${title}</div>`;
-      
-      matches.forEach((m,i) => {
-        html += `<div class="match">
-          <div>${i+1}</div>
-          <div>${m.p1} - ${m.p2}</div>
-          <div>${m.score}</div>
-        </div>`;
-      });
-
-      html += `</div>`;
-      return html;
+      createMatches(`${name}-quarti`, data.quarti);
+      createMatches(`${name}-semi`, data.semi);
+      createMatches(`${name}-finale`, data.finale);
     }
 
-    return `
-      <div class="tournament">
-        <div class="tournament-title">${name}</div>
-        ${round("Quarti di finale", data.quarti)}
-        ${round("Semifinali", data.semi)}
-        ${round("Finale", data.finale)}
-      </div>
-    `;
-  }
+    function createMatches(containerId, matches) {
+      const container = document.getElementById(containerId);
+      matches.forEach((m, i) => {
+        const matchDiv = document.createElement("div");
+        matchDiv.classList.add("match");
+        matchDiv.innerHTML = `
+          <div>${i+1}</div>
+          <div>
+            ${m.f1 ? `<img src="https://flagcdn.com/w20/${m.f1}.png" class="flag-small">` : ""}${m.p1} 
+            - 
+            ${m.f2 ? `<img src="https://flagcdn.com/w20/${m.f2}.png" class="flag-small">` : ""}${m.p2}
+          </div>
+          <div>${m.score}</div>
+        `;
+        container.appendChild(matchDiv);
+      });
+    }
 
-  document.getElementById('brisbane').innerHTML = createTournament("Brisbane", data.brisbane);
-  document.getElementById('hongkong').innerHTML = createTournament("Hong Kong", data.hongkong);
-  document.getElementById('adelaide').innerHTML = createTournament("Adelaide", data.adelaide);
-  document.getElementById('auckland').innerHTML = createTournament("Auckland", data.auckland);
+    // Crea tutti i tornei
+    for (let tournament in week1) {
+      createTournamentHTML(tournament, week1[tournament]);
+    }
 
-});
-
-</script>
+  </script>
 
 </body>
 </html>
