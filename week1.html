@@ -55,19 +55,19 @@
 
     .tournament h2 {
   font-size: 40px;
-  text-align: center;
-  color: red; /* testo rosso */
   text-transform: uppercase;
   font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: linear-gradient(to right, #f9f9f9, #e0e0e0); /* sfondo sfumato chiaro */
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.4); /* ombra leggera */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px; /* spazio tra i loghi e il testo */
+  color: red; /* testo rosso */
+  text-align: center;
 }
+
+.tournament h2 .tournament-name {
+  background: linear-gradient(to right, #f9f9f9, #e0e0e0); /* sfumatura chiara sotto il testo */
+  padding: 5px 15px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.3); /* ombra leggera */
+}
+    
 .tournament h2 img {
   height: 50px; /* dimensione dei loghi */
 }
@@ -147,10 +147,10 @@
 
           tourDiv.innerHTML = `
             <h2>
-              <img src="${logoATP250}" alt="Logo ATP 250">
-              ${name.toUpperCase()}
-              <img src="${logosSinistri[name]}" alt="Logo torneo">
-            </h2>
+  <img src="${logoATP250}" alt="Logo ATP 250">
+  <span class="tournament-name">${name.toUpperCase()}</span>
+  <img src="${logosSinistri[name]}" alt="Logo torneo">
+</h2>
             <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
             <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
             <div class="round-title">Finale</div><div id="${name}-finale"></div>
