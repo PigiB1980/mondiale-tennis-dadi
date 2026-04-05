@@ -36,6 +36,7 @@
       overflow: hidden;
       width: 300px;
       height: 150px;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .player-img {
@@ -51,6 +52,11 @@
       padding: 15px;
       flex: 1;
     }
+
+    .player-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
 
     .name {
       font-size: 18px;
