@@ -41,7 +41,7 @@
 
     .match {
       display: grid;
-      grid-template-columns: 60px 1fr 160px;
+      grid-template-columns: 60px auto 120px; /* colonna centrale più flessibile, punteggio vicino */
       padding: 12px 0;
       border-bottom: 4px solid #1c4d73;
       font-size: 18px;
@@ -57,11 +57,13 @@
     .match div:nth-child(2) {
       border-right: 4px solid #1c4d73;
       font-size: 18px;
+      padding-left: 15px;  /* sposta la partita verso destra */
     }
 
     .match div:nth-child(3) {
       text-align: right;
       font-size: 18px;
+      padding-left: 5px;  /* avvicina il punteggio alla partita */
     }
 
     .flag-small {
@@ -69,6 +71,7 @@
       vertical-align: middle;
       margin-right: 6px;
     }
+
   </style>
 </head>
 <body>
@@ -80,49 +83,53 @@
   <script>
     const tournamentsContainer = document.getElementById("tournaments-container");
 
-    function createTournamentHTML(name, data) {
-      const tourDiv = document.createElement("div");
-      tourDiv.classList.add("tournament");
-
-      tourDiv.innerHTML = `<h2>${name}</h2>
-        <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
-        <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
-        <div class="round-title">Finale</div><div id="${name}-finale"></div>
-      `;
-      tournamentsContainer.appendChild(tourDiv);
-
-      createMatches(`${name}-quarti`, data.quarti);
-      createMatches(`${name}-semi`, data.semi);
-      createMatches(`${name}-finale`, data.finale);
-    }
-
-    function createMatches(containerId, matches) {
-      const container = document.getElementById(containerId);
-      matches.forEach((m, i) => {
-        const matchDiv = document.createElement("div");
-        matchDiv.classList.add("match");
-        matchDiv.innerHTML = `
-          <div>${i+1}</div>
-          <div>
-            ${m.f1 ? `<img src="https://flagcdn.com/w20/${m.f1}.png" class="flag-small">` : ""}${m.p1} 
-            - 
-            ${m.f2 ? `<img src="https://flagcdn.com/w20/${m.f2}.png" class="flag-small">` : ""}${m.p2}
-          </div>
-          <div>${m.score}</div>
-        `;
-        container.appendChild(matchDiv);
-      });
-    }
-
-    // Carica il JSON esterno week1.json
-    fetch("week1.json")
+    // Carica JSON esterno (week1.json)
+    fetch('week1.json')
       .then(response => response.json())
       .then(week1 => {
+
+        function createTournamentHTML(name, data) {
+          const tourDiv = document.createElement("div");
+          tourDiv.classList.add("tournament");
+
+          tourDiv.innerHTML = `<h2>${name}</h2>
+            <div class="round-title">Quarti di finale</div><div id="${name}-quarti"></div>
+            <div class="round-title">Semifinali</div><div id="${name}-semi"></div>
+            <div class="round-title">Finale</div><div id="${name}-finale"></div>
+          `;
+          tournamentsContainer.appendChild(tourDiv);
+
+          createMatches(`${name}-quarti`, data.quarti);
+          createMatches(`${name}-semi`, data.semi);
+          createMatches(`${name}-finale`, data.finale);
+        }
+
+        function createMatches(containerId, matches) {
+          const container = document.getElementById(containerId);
+          matches.forEach((m, i) => {
+            const matchDiv = document.createElement("div");
+            matchDiv.classList.add("match");
+            matchDiv.innerHTML = `
+              <div>${i+1}</div>
+              <div>
+                ${m.f1 ? `<img src="https://flagcdn.com/w20/${m.f1}.png" class="flag-small">` : ""}${m.p1} 
+                - 
+                ${m.f2 ? `<img src="https://flagcdn.com/w20/${m.f2}.png" class="flag-small">` : ""}${m.p2}
+              </div>
+              <div>${m.score}</div>
+            `;
+            container.appendChild(matchDiv);
+          });
+        }
+
+        // Crea tutti i tornei
         for (let tournament in week1) {
           createTournamentHTML(tournament, week1[tournament]);
         }
+
       })
-      .catch(err => console.error("Errore caricando week1.json:", err));
+      .catch(err => console.error('Errore nel caricamento del JSON:', err));
+
   </script>
 
 </body>
