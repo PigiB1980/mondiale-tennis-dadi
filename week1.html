@@ -25,6 +25,7 @@
       margin: 20px;
       background: #132f4c;
       border-radius: 10px;
+      width: 600px; /* tabellone più compatto */
     }
 
     .tournament h2 {
@@ -41,8 +42,8 @@
 
     .match {
       display: grid;
-      grid-template-columns: 60px auto 80px; /* punteggio molto vicino */
-      padding: 10px 0;
+      grid-template-columns: 50px 300px 80px; /* colonna partita più stretta */
+      padding: 8px 0;
       border-bottom: 4px solid #1c4d73;
       font-size: 18px;
     }
@@ -57,13 +58,16 @@
     .match div:nth-child(2) {
       border-right: 4px solid #1c4d73;
       font-size: 18px;
-      padding-left: 15px;  /* partita spostata a destra */
+      padding-left: 10px; /* partita leggermente spostata a destra */
+      white-space: nowrap; /* evita che il testo vada a capo */
+      overflow: hidden;
     }
 
     .match div:nth-child(3) {
       text-align: right;
       font-size: 18px;
-      padding-left: 2px; /* punteggio molto vicino alla partita */
+      padding-left: 5px; /* punteggio molto vicino alla partita */
+      white-space: nowrap;
     }
 
     .flag-small {
