@@ -41,8 +41,8 @@
 
     .match {
       display: grid;
-      grid-template-columns: 60px auto 120px; /* colonna centrale più flessibile, punteggio vicino */
-      padding: 12px 0;
+      grid-template-columns: 60px auto 80px; /* punteggio molto vicino */
+      padding: 10px 0;
       border-bottom: 4px solid #1c4d73;
       font-size: 18px;
     }
@@ -57,13 +57,13 @@
     .match div:nth-child(2) {
       border-right: 4px solid #1c4d73;
       font-size: 18px;
-      padding-left: 15px;  /* sposta la partita verso destra */
+      padding-left: 15px;  /* partita spostata a destra */
     }
 
     .match div:nth-child(3) {
       text-align: right;
       font-size: 18px;
-      padding-left: 5px;  /* avvicina il punteggio alla partita */
+      padding-left: 2px; /* punteggio molto vicino alla partita */
     }
 
     .flag-small {
@@ -83,7 +83,6 @@
   <script>
     const tournamentsContainer = document.getElementById("tournaments-container");
 
-    // Carica JSON esterno (week1.json)
     fetch('week1.json')
       .then(response => response.json())
       .then(week1 => {
@@ -122,7 +121,6 @@
           });
         }
 
-        // Crea tutti i tornei
         for (let tournament in week1) {
           createTournamentHTML(tournament, week1[tournament]);
         }
