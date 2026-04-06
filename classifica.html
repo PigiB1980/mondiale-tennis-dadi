@@ -82,7 +82,10 @@
       // prende i punteggi
       const punteggi = data.punteggi || {};
 
-      for (let nome in punteggi) {
+      const ordinati = Object.entries(giocatori)
+  .sort((a, b) => b[1].totale - a[1].totale);
+
+ordinati.forEach(([nome, g]) => {
         giocatori[nome] = {
           totale: punteggi[nome],
           week1: punteggi[nome]
