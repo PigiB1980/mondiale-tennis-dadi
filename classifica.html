@@ -78,34 +78,33 @@
     .then(data => {
 
       const giocatori = {};
-
-      // prende i punteggi
       const punteggi = data.punteggi || {};
 
-      const ordinati = Object.entries(giocatori)
-  .sort((a, b) => b[1].totale - a[1].totale);
-
-ordinati.forEach(([nome, g]) => {
+      // 1️⃣ riempi oggetto giocatori
+      for (let nome in punteggi) {
         giocatori[nome] = {
           totale: punteggi[nome],
           week1: punteggi[nome]
         };
       }
 
-      // crea righe tabella
-      for (let nome in giocatori) {
-        const g = giocatori[nome];
+      // 2️⃣ ordina
+      const ordinati = Object.entries(giocatori)
+        .sort((a, b) => b[1].totale - a[1].totale);
 
+      // 3️⃣ stampa tabella
+      ordinati.forEach(([nome, g], index) => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
+          <td>${index + 1}</td>
           <td>${nome}</td>
           <td class="totale">${g.totale}</td>
           <td>${g.week1}</td>
         `;
 
         tabella.appendChild(row);
-      }
+      });
 
     });
 </script>
