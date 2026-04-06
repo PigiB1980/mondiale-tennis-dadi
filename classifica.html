@@ -12,42 +12,40 @@
       margin: 0;
       padding: 20px;
     }
-
     h1 {
       text-align: center;
-      font-size: 40px;
-      margin-bottom: 20px;
       color: #FFD700;
       text-shadow: 2px 2px 4px #0000FF;
     }
-
     table {
-      width: 100%;
       border-collapse: collapse;
-      text-align: center;
+      width: 100%;
+      margin-top: 20px;
+      table-layout: fixed;
     }
-
     th, td {
-      border: 2px solid #1c4d73;
-      padding: 8px;
+      border: 1px solid #1c4d73;
+      padding: 6px 8px;
+      text-align: center;
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-
     th {
-      background-color: #132f4c;
-      color: #FFD700;
-      font-size: 16px;
+      background: #132f4c;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-
-    td {
-      background-color: #1c4d73;
-      font-size: 16px;
-    }
-
     td.totale {
       font-weight: bold;
-      text-transform: uppercase;
-      background: #ff4500;
-      color: white;
+      background: #1c4d73;
+      color: #FFD700;
+    }
+    tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.05);
     }
   </style>
 </head>
@@ -55,68 +53,83 @@
 
 <h1>CLASSIFICA MONDIALE TENNIS</h1>
 
-<table>
+<table id="classifica">
   <thead>
     <tr>
-      <th>#</th>
+      <th>Pos</th>
       <th>Giocatore</th>
-      <th>Totale</th>
-      <!-- colonne settimane 1–28 -->
-      <script>
-        for (let i = 1; i <= 28; i++) {
-          document.write(`<th>Sett. ${i}</th>`);
-        }
-      </script>
+      <th>TOTALE</th>
+      <!-- colonne settimane -->
+      <th>Week 1</th>
+      <th>Week 2</th>
+      <th>Week 3</th>
+      <th>Week 4</th>
+      <th>Week 5</th>
+      <th>Week 6</th>
+      <th>Week 7</th>
+      <th>Week 8</th>
+      <th>Week 9</th>
+      <th>Week 10</th>
+      <th>Week 11</th>
+      <th>Week 12</th>
+      <th>Week 13</th>
+      <th>Week 14</th>
+      <th>Week 15</th>
+      <th>Week 16</th>
+      <th>Week 17</th>
+      <th>Week 18</th>
+      <th>Week 19</th>
+      <th>Week 20</th>
+      <th>Week 21</th>
+      <th>Week 22</th>
+      <th>Week 23</th>
+      <th>Week 24</th>
+      <th>Week 25</th>
+      <th>Week 26</th>
+      <th>Week 27</th>
+      <th>Week 28</th>
     </tr>
   </thead>
-  <tbody id="classifica">
+  <tbody>
   </tbody>
 </table>
 
 <script>
-  const tabella = document.querySelector("#classifica tbody");
+const tabella = document.querySelector("#classifica tbody");
+const settimane = [];
+for (let i = 1; i <= 28; i++) settimane.push(`week${i}`);
+const giocatori = {};
 
-  fetch('week1.json') // puoi poi fare loop su tutti i JSON settimanali
-    .then(r => r.json())
-    .then(data => {
-
-      const punteggi = data.punteggi || {};
-
-      // inizializza giocatori
-      const giocatori = {};
-      for (let nome in punteggi) {
-        giocatori[nome] = {
-          totale: punteggi[nome],
-          week1: punteggi[nome]
-        };
-      }
-
-      // ordina per totale
-      const ordinati = Object.entries(giocatori)
-        .sort((a, b) => b[1].totale - a[1].totale);
-
-      // aggiunge posizione e crea righe
-      ordinati.forEach(([nome, g], index) => {
-        g.posizione = index + 1;
-
-        const row = document.createElement("tr");
-
-        let settimaneHTML = '';
-        for (let i = 1; i <= 28; i++) {
-          settimaneHTML += `<td>${g['week'+i] || ''}</td>`;
+Promise.all(settimane.map((w,i) => fetch(`week${i+1}.json`).then(r => r.json())))
+  .then(tutti => {
+    tutti.forEach((data,i) => {
+      const puntiSettimana = data.punteggi || {};
+      for (let nome in puntiSettimana) {
+        if (!giocatori[nome]) {
+          giocatori[nome] = { totale: 0 };
+          settimane.forEach(s => giocatori[nome][s] = 0);
         }
+        giocatori[nome][`week${i+1}`] = puntiSettimana[nome];
+        giocatori[nome].totale += puntiSettimana[nome];
+      }
+    });
 
-        row.innerHTML = `
-          <td>${g.posizione}</td>
-          <td>${nome}</td>
-          <td class="totale">${g.totale}</td>
-          ${settimaneHTML}
-        `;
+    const ordinati = Object.entries(giocatori).sort((a,b) => b[1].totale - a[1].totale);
 
-        tabella.appendChild(row);
-      });
-    })
-    .catch(err => console.error('Errore caricamento JSON:', err));
+    ordinati.forEach(([nome, g], idx) => {
+      const row = document.createElement("tr");
+      let settimaneHTML = settimane.map(s => `<td>${g[s] || ''}</td>`).join('');
+      row.innerHTML = `
+        <td>${idx+1}</td>
+        <td>${nome}</td>
+        <td class="totale">${g.totale}</td>
+        ${settimaneHTML}
+      `;
+      tabella.appendChild(row);
+    });
+
+  })
+  .catch(err => console.error("Errore caricamento JSON:", err));
 </script>
 
 </body>
