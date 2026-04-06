@@ -58,11 +58,12 @@
     "finale": [
       {"p1": "", "f1": "", "p2": "", "f2": "", "score": ""}
     ]
-  }
-  "punteggi": {
+    
+    "punteggi": {
   "Jannik Sinner": 25,
   "Carlos Alcaraz": 15
+  }
+  
 }
 
-}
 
