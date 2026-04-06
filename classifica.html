@@ -29,7 +29,7 @@
 
   table {
     border-collapse: collapse;
-    min-width: 1200px; /* forza scroll */
+    min-width: 1400px; /* forza scroll */
     width: 100%;
   }
 
@@ -83,49 +83,68 @@ const tabella = document.querySelector("#classifica tbody");
 const theadRow = document.querySelector("#classifica thead tr");
 const settimane = Array.from({length:28}, (_,i)=>i+1);
 
-// crea le intestazioni settimane
+// crea intestazioni settimane
 settimane.forEach(n => {
     const th = document.createElement("th");
     th.textContent = `SET ${n}`;
     theadRow.appendChild(th);
 });
 
-// caricamento dati dal JSON
-fetch('week1.json')
-  .then(r => r.json())
-  .then(data => {
+// array dei nomi dei file JSON
+const weekFiles = Array.from({length:28}, (_,i)=>`week${i+1}.json`);
 
-    const giocatori = {};
-    const punteggi = data.punteggi || {};
+// oggetto per tenere i punteggi
+const giocatori = {};
 
-    // crea oggetto giocatori
-    for (let nome in punteggi) {
-      giocatori[nome] = {
-        totale: punteggi[nome],
-        settimane: Array(28).fill(0)
-      };
-      // settimana 1 prende il punteggio dal JSON
-      giocatori[nome].settimane[0] = punteggi[nome];
-    }
+// funzione per caricare un JSON
+function caricaSettimana(idx) {
+  fetch(weekFiles[idx])
+    .then(r => r.json())
+    .then(data => {
+      const punteggi = data.punteggi || {};
+      for (let nome in punteggi) {
+        if (!giocatori[nome]) {
+          giocatori[nome] = {totale:0, settimane: Array(28).fill(0)};
+        }
+        giocatori[nome].settimane[idx] = punteggi[nome];
+      }
 
-    // ordina per totale
-    const ordinati = Object.entries(giocatori)
-      .sort((a,b)=>b[1].totale - a[1].totale);
+      // aggiorna totale
+      for (let nome in giocatori) {
+        giocatori[nome].totale = giocatori[nome].settimane.reduce((a,b)=>a+b,0);
+      }
 
-    // crea righe tabella
-    ordinati.forEach(([nome, g], idx) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${idx+1}</td>
-        <td>${nome}</td>
-        <td class="totale">${g.totale}</td>
-        ${g.settimane.map(p => `<td>${p}</td>`).join('')}
-      `;
-      tabella.appendChild(row);
-    });
+      // se è l’ultima settimana caricata, aggiorna la tabella
+      if(idx === weekFiles.length-1) {
+        aggiornaTabella();
+      }
+    })
+    .catch(err => console.error(`Errore caricamento ${weekFiles[idx]}:`, err));
+}
 
-  })
-  .catch(err => console.error('Errore caricamento JSON:', err));
+// carica tutte le settimane
+weekFiles.forEach((_,i)=>caricaSettimana(i));
+
+// funzione per aggiornare la tabella
+function aggiornaTabella() {
+  // svuota tabella
+  tabella.innerHTML = '';
+
+  // ordina giocatori per totale
+  const ordinati = Object.entries(giocatori)
+    .sort((a,b)=>b[1].totale - a[1].totale);
+
+  ordinati.forEach(([nome, g], idx) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${idx+1}</td>
+      <td>${nome}</td>
+      <td class="totale">${g.totale}</td>
+      ${g.settimane.map(p => `<td>${p}</td>`).join('')}
+    `;
+    tabella.appendChild(row);
+  });
+}
 </script>
 
 </body>
