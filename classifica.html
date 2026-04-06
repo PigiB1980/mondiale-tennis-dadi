@@ -3,64 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Classifica Tennis</title>
+<title>Classifica Mondiale Tennis</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #0b1d2a;
-    color: white;
-  }
+body {
+  font-family: Arial, sans-serif;
+  background: #0b1d2a;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
 
-  header {
-    background: #132f4c;
-    padding: 20px;
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: #FFD700;
-    text-shadow: 2px 2px 4px #0000FF;
-  }
+.table-container {
+  overflow-x: auto;
+  padding: 20px;
+}
 
-  .table-container {
-    overflow-x: auto;
-    padding: 20px;
-  }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 1600px; /* abbastanza per 28 colonne */
+}
 
-  table {
-    border-collapse: collapse;
-    min-width: 1200px; /* forza scroll */
-    width: 100%;
-  }
+th, td {
+  border: 2px solid #1c4d73;
+  padding: 8px 12px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 16px;
+}
 
-  th, td {
-    border: 2px solid #1c4d73;
-    padding: 8px 12px;
-    text-align: center;
-    white-space: nowrap;
-    font-size: 16px;
-  }
+th {
+  background: #132f4c;
+  color: #FFD700;
+  font-size: 18px;
+}
 
-  th {
-    background: #132f4c;
-    color: #FFD700;
-    font-size: 18px;
-  }
+td.totale {
+  font-weight: bold;
+  background: #1c4d73;
+}
 
-  td.totale {
-    font-weight: bold;
-    font-size: 18px;
-    background: #1c4d73;
-  }
+/* righe alternate */
+tr:nth-child(even) td {
+  background: rgba(255,255,255,0.05);
+}
 
-  tr:nth-child(even) td {
-    background: rgba(255,255,255,0.05);
-  }
+/* STICKY PRIME 3 COLONNE */
+th:nth-child(1), td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  background: #132f4c;
+  z-index: 4;
+}
+
+th:nth-child(2), td:nth-child(2) {
+  position: sticky;
+  left: 50px;
+  background: #132f4c;
+  z-index: 3;
+}
+
+th:nth-child(3), td:nth-child(3) {
+  position: sticky;
+  left: 300px;
+  background: #132f4c;
+  z-index: 3;
+}
+
 </style>
 </head>
 <body>
 
-<header>CLASSIFICA TENNIS</header>
+<h1 style="text-align:center; padding:20px;">CLASSIFICA MONDIALE TENNIS</h1>
 
 <div class="table-container">
   <table id="classifica">
@@ -69,63 +83,45 @@
         <th>POS</th>
         <th>GIOCATORE</th>
         <th>TOTALE</th>
-        <!-- colonne settimane generate da JS -->
+        <!-- 28 settimane -->
+        ${Array.from({length:28}, (_,i)=>`<th>SETT. ${i+1}</th>`).join('')}
       </tr>
     </thead>
     <tbody>
-      <!-- righe giocatori generate da JS -->
+      <!-- qui saranno inserite le righe via JS -->
     </tbody>
   </table>
 </div>
 
 <script>
 const tabella = document.querySelector("#classifica tbody");
-const theadRow = document.querySelector("#classifica thead tr");
-const settimane = Array.from({length:28}, (_,i)=>i+1);
 
-// crea le intestazioni settimane
-settimane.forEach(n => {
-    const th = document.createElement("th");
-    th.textContent = `SET ${n}`;
-    theadRow.appendChild(th);
+// dati d'esempio (poi li prenderai dai tuoi 28 json)
+const giocatori = {
+  "Carlos Alcaraz": { totale: 35, settimane: Array(28).fill(0) },
+  "Jannik Sinner": { totale: 25, settimane: Array(28).fill(0) },
+  "Novak Djokovic": { totale: 20, settimane: Array(28).fill(0) },
+  "Rafael Nadal": { totale: 15, settimane: Array(28).fill(0) }
+};
+
+// riempiamo qualche settimana per demo
+giocatori["Carlos Alcaraz"].settimane[0] = 35;
+giocatori["Jannik Sinner"].settimane[0] = 25;
+
+// ordiniamo per totale
+const ordinati = Object.entries(giocatori)
+  .sort((a,b) => b[1].totale - a[1].totale);
+
+ordinati.forEach(([nome, g], index) => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${index+1}</td>
+    <td>${nome}</td>
+    <td class="totale">${g.totale}</td>
+    ${g.settimane.map(p => `<td>${p}</td>`).join('')}
+  `;
+  tabella.appendChild(row);
 });
-
-// caricamento dati dal JSON
-fetch('week1.json')
-  .then(r => r.json())
-  .then(data => {
-
-    const giocatori = {};
-    const punteggi = data.punteggi || {};
-
-    // crea oggetto giocatori
-    for (let nome in punteggi) {
-      giocatori[nome] = {
-        totale: punteggi[nome],
-        settimane: Array(28).fill(0)
-      };
-      // settimana 1 prende il punteggio dal JSON
-      giocatori[nome].settimane[0] = punteggi[nome];
-    }
-
-    // ordina per totale
-    const ordinati = Object.entries(giocatori)
-      .sort((a,b)=>b[1].totale - a[1].totale);
-
-    // crea righe tabella
-    ordinati.forEach(([nome, g], idx) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${idx+1}</td>
-        <td>${nome}</td>
-        <td class="totale">${g.totale}</td>
-        ${g.settimane.map(p => `<td>${p}</td>`).join('')}
-      `;
-      tabella.appendChild(row);
-    });
-
-  })
-  .catch(err => console.error('Errore caricamento JSON:', err));
 </script>
 
 </body>
