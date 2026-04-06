@@ -5,57 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Classifica Tennis</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #0b1d2a;
-    color: white;
-  }
-
-  header {
-    background: #132f4c;
-    padding: 20px;
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: #FFD700;
-    text-shadow: 2px 2px 4px #0000FF;
-  }
-
-  .table-container {
-    overflow-x: auto;
-    padding: 20px;
-  }
-
-  table {
-    border-collapse: collapse;
-    min-width: 1400px; /* forza scroll */
-    width: 100%;
-  }
-
-  th, td {
-    border: 2px solid #1c4d73;
-    padding: 8px 12px;
-    text-align: center;
-    white-space: nowrap;
-    font-size: 16px;
-  }
-
-  th {
-    background: #132f4c;
-    color: #FFD700;
-    font-size: 18px;
-  }
-
-  td.totale {
-    font-weight: bold;
-    font-size: 18px;
-    background: #1c4d73;
-  }
-
-  tr:nth-child(even) td {
-    background: rgba(255,255,255,0.05);
-  }
+  body { font-family: Arial, sans-serif; margin:0; background:#0b1d2a; color:white; }
+  header { background:#132f4c; padding:20px; text-align:center; font-size:40px; font-weight:bold; color:#FFD700; text-shadow:2px 2px 4px #0000FF; }
+  .table-container { overflow-x:auto; padding:20px; }
+  table { border-collapse: collapse; min-width:1400px; width:100%; }
+  th, td { border:2px solid #1c4d73; padding:8px 12px; text-align:center; white-space:nowrap; font-size:16px; }
+  th { background:#132f4c; color:#FFD700; font-size:18px; }
+  td.totale { font-weight:bold; font-size:18px; background:#1c4d73; }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.05); }
 </style>
 </head>
 <body>
@@ -69,12 +26,9 @@
         <th>POS</th>
         <th>GIOCATORE</th>
         <th>TOTALE</th>
-        <!-- colonne settimane generate da JS -->
       </tr>
     </thead>
-    <tbody>
-      <!-- righe giocatori generate da JS -->
-    </tbody>
+    <tbody></tbody>
   </table>
 </div>
 
@@ -82,6 +36,8 @@
 const tabella = document.querySelector("#classifica tbody");
 const theadRow = document.querySelector("#classifica thead tr");
 const settimane = Array.from({length:28}, (_,i)=>i+1);
+const weekFiles = Array.from({length:28}, (_,i)=>`week${i+1}.json`);
+const giocatori = {};
 
 // crea intestazioni settimane
 settimane.forEach(n => {
@@ -90,50 +46,10 @@ settimane.forEach(n => {
     theadRow.appendChild(th);
 });
 
-// array dei nomi dei file JSON
-const weekFiles = Array.from({length:28}, (_,i)=>`week${i+1}.json`);
-
-// oggetto per tenere i punteggi
-const giocatori = {};
-
-// funzione per caricare un JSON
-function caricaSettimana(idx) {
-  fetch(weekFiles[idx])
-    .then(r => r.json())
-    .then(data => {
-      const punteggi = data.punteggi || {};
-      for (let nome in punteggi) {
-        if (!giocatori[nome]) {
-          giocatori[nome] = {totale:0, settimane: Array(28).fill(0)};
-        }
-        giocatori[nome].settimane[idx] = punteggi[nome];
-      }
-
-      // aggiorna totale
-      for (let nome in giocatori) {
-        giocatori[nome].totale = giocatori[nome].settimane.reduce((a,b)=>a+b,0);
-      }
-
-      // se è l’ultima settimana caricata, aggiorna la tabella
-      if(idx === weekFiles.length-1) {
-        aggiornaTabella();
-      }
-    })
-    .catch(err => console.error(`Errore caricamento ${weekFiles[idx]}:`, err));
-}
-
-// carica tutte le settimane
-weekFiles.forEach((_,i)=>caricaSettimana(i));
-
 // funzione per aggiornare la tabella
 function aggiornaTabella() {
-  // svuota tabella
   tabella.innerHTML = '';
-
-  // ordina giocatori per totale
-  const ordinati = Object.entries(giocatori)
-    .sort((a,b)=>b[1].totale - a[1].totale);
-
+  const ordinati = Object.entries(giocatori).sort((a,b)=>b[1].totale - a[1].totale);
   ordinati.forEach(([nome, g], idx) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -145,6 +61,25 @@ function aggiornaTabella() {
     tabella.appendChild(row);
   });
 }
+
+// carica JSON settimana per settimana
+weekFiles.forEach((file, idx) => {
+  fetch(file)
+    .then(r => r.json())
+    .then(data => {
+      const punteggi = data.punteggi || {};
+      for (let nome in punteggi) {
+        if(!giocatori[nome]) giocatori[nome] = {totale:0, settimane:Array(28).fill(0)};
+        giocatori[nome].settimane[idx] = punteggi[nome];
+      }
+      // aggiorna totale di tutti i giocatori
+      for(let nome in giocatori) {
+        giocatori[nome].totale = giocatori[nome].settimane.reduce((a,b)=>a+b,0);
+      }
+      aggiornaTabella();
+    })
+    .catch(err => console.warn(`Attenzione: file ${file} non trovato`, err));
+});
 </script>
 
 </body>
