@@ -1,135 +1,122 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classifica Mondiale Tennis</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b1d2a;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #FFD700;
-      text-shadow: 2px 2px 4px #0000FF;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 20px;
-      table-layout: fixed;
-    }
-    th, td {
-      border: 1px solid #1c4d73;
-      padding: 6px 8px;
-      text-align: center;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    th {
-      background: #132f4c;
-      font-weight: bold;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    td.totale {
-      font-weight: bold;
-      background: #1c4d73;
-      color: #FFD700;
-    }
-    tbody tr:nth-child(even) {
-      background: rgba(255,255,255,0.05);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classifica Mondiale Tennis</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #0b1d2a;
+    color: white;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px #0000FF;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin: 20px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: max-content;
+    min-width: 100%;
+    background: #132f4c;
+  }
+
+  th, td {
+    border: 1px solid #1c4d73;
+    padding: 8px 12px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  th {
+    background: #1c4d73;
+    font-weight: bold;
+    color: #FFD700;
+  }
+
+  td.totale {
+    font-weight: bold;
+    color: #FF4500;
+  }
+
+  tr:nth-child(even) td {
+    background: #0f2a3d;
+  }
+
+  tr:hover td {
+    background: #1c4d73;
+  }
+</style>
 </head>
 <body>
 
 <h1>CLASSIFICA MONDIALE TENNIS</h1>
 
-<table id="classifica">
-  <thead>
-    <tr>
-      <th>Pos</th>
-      <th>Giocatore</th>
-      <th>TOTALE</th>
-      <!-- colonne settimane -->
-      <th>Week 1</th>
-      <th>Week 2</th>
-      <th>Week 3</th>
-      <th>Week 4</th>
-      <th>Week 5</th>
-      <th>Week 6</th>
-      <th>Week 7</th>
-      <th>Week 8</th>
-      <th>Week 9</th>
-      <th>Week 10</th>
-      <th>Week 11</th>
-      <th>Week 12</th>
-      <th>Week 13</th>
-      <th>Week 14</th>
-      <th>Week 15</th>
-      <th>Week 16</th>
-      <th>Week 17</th>
-      <th>Week 18</th>
-      <th>Week 19</th>
-      <th>Week 20</th>
-      <th>Week 21</th>
-      <th>Week 22</th>
-      <th>Week 23</th>
-      <th>Week 24</th>
-      <th>Week 25</th>
-      <th>Week 26</th>
-      <th>Week 27</th>
-      <th>Week 28</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+<div class="table-container">
+  <table id="classifica">
+    <thead>
+      <tr>
+        <th>POS</th>
+        <th>GIOCATORE</th>
+        <th>TOTALE</th>
+        <!-- 28 settimane -->
+        ${Array.from({length:28}, (_,i)=>`<th>W${i+1}</th>`).join('')}
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
 <script>
 const tabella = document.querySelector("#classifica tbody");
-const settimane = [];
-for (let i = 1; i <= 28; i++) settimane.push(`week${i}`);
+const settimane = Array.from({length:28}, (_,i)=>`week${i+1}`);
 const giocatori = {};
 
-Promise.all(settimane.map((w,i) => fetch(`week${i+1}.json`).then(r => r.json())))
-  .then(tutti => {
+// Carica tutti i JSON settimanali
+Promise.all(settimane.map((w,i) => 
+    fetch(`week${i+1}.json`)
+      .then(r => r.ok ? r.json() : {})   // ignora JSON mancanti
+      .catch(()=>({}))
+)).then(tutti => {
+    // Somma i punteggi per ogni giocatore
     tutti.forEach((data,i) => {
-      const puntiSettimana = data.punteggi || {};
-      for (let nome in puntiSettimana) {
-        if (!giocatori[nome]) {
-          giocatori[nome] = { totale: 0 };
-          settimane.forEach(s => giocatori[nome][s] = 0);
+        const puntiSettimana = data.punteggi || {};
+        for (let nome in puntiSettimana) {
+            if (!giocatori[nome]) {
+                giocatori[nome] = { totale: 0 };
+                settimane.forEach(s => giocatori[nome][s] = 0);
+            }
+            giocatori[nome][`week${i+1}`] = puntiSettimana[nome];
+            giocatori[nome].totale += puntiSettimana[nome];
         }
-        giocatori[nome][`week${i+1}`] = puntiSettimana[nome];
-        giocatori[nome].totale += puntiSettimana[nome];
-      }
     });
 
-    const ordinati = Object.entries(giocatori).sort((a,b) => b[1].totale - a[1].totale);
+    // Ordina per totale decrescente
+    const ordinati = Object.entries(giocatori).sort((a,b)=>b[1].totale - a[1].totale);
 
+    // Crea le righe della tabella
     ordinati.forEach(([nome, g], idx) => {
-      const row = document.createElement("tr");
-      let settimaneHTML = settimane.map(s => `<td>${g[s] || ''}</td>`).join('');
-      row.innerHTML = `
-        <td>${idx+1}</td>
-        <td>${nome}</td>
-        <td class="totale">${g.totale}</td>
-        ${settimaneHTML}
-      `;
-      tabella.appendChild(row);
+        const row = document.createElement("tr");
+        const settimaneHTML = settimane.map(s => `<td>${g[s] || ''}</td>`).join('');
+        row.innerHTML = `
+            <td>${idx+1}</td>
+            <td>${nome}</td>
+            <td class="totale">${g.totale}</td>
+            ${settimaneHTML}
+        `;
+        tabella.appendChild(row);
     });
-
-  })
-  .catch(err => console.error("Errore caricamento JSON:", err));
+});
 </script>
 
 </body>
