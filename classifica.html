@@ -29,15 +29,16 @@
 
   table {
     border-collapse: collapse;
-    min-width: 1200px; /* forza scroll */
+    min-width: 1200px;
     width: 100%;
   }
 
   th, td {
     border: 2px solid #1c4d73;
-    padding: 6px 10px;
+    padding: 8px 12px;
     text-align: center;
     white-space: nowrap;
+    font-size: 16px;
   }
 
   th {
@@ -48,33 +49,36 @@
 
   td.totale {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     background: #1c4d73;
+  }
+
+  td.giocatore {
+    text-align: left;
+    padding-left: 8px;
+    min-width: 180px;
+  }
+
+  td.separator, th.separator {
+    width: 5px;
+    background: #0b1d2a;
+    padding: 0;
+    border: none;
+  }
+
+  th.set, td.set {
+    font-size: 12px;
   }
 
   tr:nth-child(even) td {
     background: rgba(255,255,255,0.05);
   }
 
-  /* Colonna giocatore più larga */
-  td.giocatore, th.giocatore {
-    min-width: 220px;
-    text-align: left;
-    padding-left: 10px;
-  }
-
-  /* Set più piccoli */
-  td.settimana, th.settimana {
-    font-size: 14px;
-    padding: 4px 6px;
-  }
-
-  /* Bandierine */
-  .flag {
+  img.bandiera {
     width: 20px;
     height: 14px;
     vertical-align: middle;
-    margin-right: 6px;
+    margin-right: 4px;
   }
 </style>
 </head>
@@ -87,8 +91,9 @@
     <thead>
       <tr>
         <th>POS</th>
-        <th class="giocatore">GIOCATORE</th>
+        <th>GIOCATORE</th>
         <th>TOTALE</th>
+        <th class="separator"></th>
         <!-- colonne settimane generate da JS -->
       </tr>
     </thead>
@@ -99,6 +104,14 @@
 </div>
 
 <script>
+// mappa bandiere
+const bandiere = {
+  "Jannik Sinner": "it",
+  "Carlos Alcaraz": "es",
+  "Prova Prova": "fr",
+  "Pippo Pluto": "us"
+};
+
 const tabella = document.querySelector("#classifica tbody");
 const theadRow = document.querySelector("#classifica thead tr");
 const settimane = Array.from({length:28}, (_,i)=>i+1);
@@ -107,27 +120,17 @@ const settimane = Array.from({length:28}, (_,i)=>i+1);
 settimane.forEach(n => {
     const th = document.createElement("th");
     th.textContent = `SET ${n}`;
-    th.classList.add("settimana");
+    th.className = "set";
     theadRow.appendChild(th);
 });
-
-// associazione bandiere (codici ISO minuscolo)
-const bandiere = {
-  "Jannik Sinner": "it",
-  "Carlos Alcaraz": "es",
-  "Prova Prova": "us",
-  "Pippo Pluto": "fr"
-};
 
 // caricamento dati dal JSON
 fetch('week1.json')
   .then(r => r.json())
   .then(data => {
-
     const giocatori = {};
     const punteggi = data.punteggi || {};
 
-    // crea oggetto giocatori
     for (let nome in punteggi) {
       giocatori[nome] = {
         totale: punteggi[nome],
@@ -136,24 +139,21 @@ fetch('week1.json')
       giocatori[nome].settimane[0] = punteggi[nome];
     }
 
-    // ordina per totale
     const ordinati = Object.entries(giocatori)
       .sort((a,b)=>b[1].totale - a[1].totale);
 
-    // crea righe tabella
     ordinati.forEach(([nome, g], idx) => {
-      const flag = bandiere[nome] ? 
-        `<img class="flag" src="https://flagcdn.com/16x12/${bandiere[nome]}.png" alt="">` : '';
       const row = document.createElement("tr");
+      const flag = bandiere[nome] ? `<img class="bandiera" src="https://flagcdn.com/16x12/${bandiere[nome]}.png">` : '';
       row.innerHTML = `
         <td>${idx+1}</td>
         <td class="giocatore">${flag}${nome}</td>
         <td class="totale">${g.totale}</td>
-        ${g.settimane.map(p => `<td class="settimana">${p}</td>`).join('')}
+        <td class="separator"></td>
+        ${g.settimane.map(p => `<td class="set">${p}</td>`).join('')}
       `;
       tabella.appendChild(row);
     });
-
   })
   .catch(err => console.error('Errore caricamento JSON:', err));
 </script>
