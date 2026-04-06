@@ -2,86 +2,88 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Classifica</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classifica Mondiale Tennis</title>
   <style>
     body {
-      font-family: Arial;
-      margin: 0;
+      font-family: Arial, sans-serif;
       background: #0b1d2a;
       color: white;
-    }
-
-    header {
-      background: #132f4c;
-      padding: 25px;
-      text-align: center;
-      font-size: 50px;
-      font-weight: bold;
-      color: gold;
-      text-shadow: 2px 2px 4px blue;
-    }
-
-    .container {
+      margin: 0;
       padding: 20px;
-      display: flex;
-      justify-content: center;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+      color: #FFD700;
+      text-shadow: 2px 2px 4px #0000FF;
     }
 
     table {
+      width: 100%;
       border-collapse: collapse;
-      background: #132f4c;
-      width: 800px;
+      text-align: center;
     }
 
     th, td {
       border: 2px solid #1c4d73;
-      padding: 10px;
-      text-align: center;
+      padding: 8px;
     }
 
     th {
-      background: #1c4d73;
+      background-color: #132f4c;
+      color: #FFD700;
+      font-size: 16px;
     }
 
-    .totale {
+    td {
+      background-color: #1c4d73;
+      font-size: 16px;
+    }
+
+    td.totale {
       font-weight: bold;
-      font-size: 18px;
-      background: #0f253a;
+      text-transform: uppercase;
+      background: #ff4500;
+      color: white;
     }
-
   </style>
 </head>
-
 <body>
 
-<header>🏆 CLASSIFICA 🏆</header>
+<h1>CLASSIFICA MONDIALE TENNIS</h1>
 
-<div class="container">
-  <table id="classifica">
-    <thead>
-  <tr>
-    <th>#</th>
-    <th>Giocatore</th>
-    <th>Totale</th>
-    <th>Sett. 1</th>
-  </tr>
-</thead>
-    <tbody></tbody>
-  </table>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Giocatore</th>
+      <th>Totale</th>
+      <!-- colonne settimane 1–28 -->
+      <script>
+        for (let i = 1; i <= 28; i++) {
+          document.write(`<th>Sett. ${i}</th>`);
+        }
+      </script>
+    </tr>
+  </thead>
+  <tbody id="classifica">
+  </tbody>
+</table>
 
 <script>
   const tabella = document.querySelector("#classifica tbody");
 
-  fetch('week1.json')
+  fetch('week1.json') // puoi poi fare loop su tutti i JSON settimanali
     .then(r => r.json())
     .then(data => {
 
-      const giocatori = {};
       const punteggi = data.punteggi || {};
 
-      // 1️⃣ riempi oggetto giocatori
+      // inizializza giocatori
+      const giocatori = {};
       for (let nome in punteggi) {
         giocatori[nome] = {
           totale: punteggi[nome],
@@ -89,25 +91,32 @@
         };
       }
 
-      // 2️⃣ ordina
+      // ordina per totale
       const ordinati = Object.entries(giocatori)
         .sort((a, b) => b[1].totale - a[1].totale);
 
-      // 3️⃣ stampa tabella
+      // aggiunge posizione e crea righe
       ordinati.forEach(([nome, g], index) => {
+        g.posizione = index + 1;
+
         const row = document.createElement("tr");
 
+        let settimaneHTML = '';
+        for (let i = 1; i <= 28; i++) {
+          settimaneHTML += `<td>${g['week'+i] || ''}</td>`;
+        }
+
         row.innerHTML = `
-          <td>${index + 1}</td>
+          <td>${g.posizione}</td>
           <td>${nome}</td>
           <td class="totale">${g.totale}</td>
-          <td>${g.week1}</td>
+          ${settimaneHTML}
         `;
 
         tabella.appendChild(row);
       });
-
-    });
+    })
+    .catch(err => console.error('Errore caricamento JSON:', err));
 </script>
 
 </body>
