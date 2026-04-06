@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Classifica</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #0b1d2a;
+      color: white;
+    }
+
+    header {
+      background: #132f4c;
+      padding: 25px;
+      text-align: center;
+      font-size: 50px;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 2px 2px 4px blue;
+    }
+
+    .container {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      background: #132f4c;
+      width: 800px;
+    }
+
+    th, td {
+      border: 2px solid #1c4d73;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background: #1c4d73;
+    }
+
+    .totale {
+      font-weight: bold;
+      font-size: 18px;
+      background: #0f253a;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>🏆 CLASSIFICA 🏆</header>
+
+<div class="container">
+  <table id="classifica">
+    <thead>
+      <tr>
+        <th>Giocatore</th>
+        <th>Totale</th>
+        <th>Sett. 1</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  const tabella = document.querySelector("#classifica tbody");
+
+  fetch('week1.json')
+    .then(r => r.json())
+    .then(data => {
+
+      const giocatori = {};
+
+      // prende i punteggi
+      const punteggi = data.punteggi || {};
+
+      for (let nome in punteggi) {
+        giocatori[nome] = {
+          totale: punteggi[nome],
+          week1: punteggi[nome]
+        };
+      }
+
+      // crea righe tabella
+      for (let nome in giocatori) {
+        const g = giocatori[nome];
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${nome}</td>
+          <td class="totale">${g.totale}</td>
+          <td>${g.week1}</td>
+        `;
+
+        tabella.appendChild(row);
+      }
+
+    });
+</script>
+
+</body>
+</html>
