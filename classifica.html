@@ -20,7 +20,6 @@ body {
 
 table {
   border-collapse: collapse;
-  width: 100%;
   min-width: 1600px; /* abbastanza per 28 colonne */
 }
 
@@ -36,6 +35,9 @@ th {
   background: #132f4c;
   color: #FFD700;
   font-size: 18px;
+  position: sticky;
+  top: 0; /* intestazione sempre visibile */
+  z-index: 5;
 }
 
 td.totale {
@@ -53,21 +55,19 @@ th:nth-child(1), td:nth-child(1) {
   position: sticky;
   left: 0;
   background: #132f4c;
-  z-index: 4;
+  z-index: 10;
 }
-
 th:nth-child(2), td:nth-child(2) {
   position: sticky;
   left: 50px;
   background: #132f4c;
-  z-index: 3;
+  z-index: 9;
 }
-
 th:nth-child(3), td:nth-child(3) {
   position: sticky;
   left: 300px;
   background: #132f4c;
-  z-index: 3;
+  z-index: 8;
 }
 
 </style>
@@ -96,7 +96,7 @@ th:nth-child(3), td:nth-child(3) {
 <script>
 const tabella = document.querySelector("#classifica tbody");
 
-// dati d'esempio (poi li prenderai dai tuoi 28 json)
+// dati d'esempio
 const giocatori = {
   "Carlos Alcaraz": { totale: 35, settimane: Array(28).fill(0) },
   "Jannik Sinner": { totale: 25, settimane: Array(28).fill(0) },
@@ -104,11 +104,9 @@ const giocatori = {
   "Rafael Nadal": { totale: 15, settimane: Array(28).fill(0) }
 };
 
-// riempiamo qualche settimana per demo
 giocatori["Carlos Alcaraz"].settimane[0] = 35;
 giocatori["Jannik Sinner"].settimane[0] = 25;
 
-// ordiniamo per totale
 const ordinati = Object.entries(giocatori)
   .sort((a,b) => b[1].totale - a[1].totale);
 
